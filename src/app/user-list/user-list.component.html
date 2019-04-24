@@ -1,0 +1,53 @@
+<div class="container">
+  <h1>Users</h1>
+  <button class="btn btn-primary">Add</button>
+  <button class="btn btn-primary" (click)="toggleEdit()" *ngIf="!edit; else save">Edit</button>
+  <ng-template #save>
+    <button class="btn btn-primary" (click)="toggleEdit()" >Save</button>
+  </ng-template>
+
+  <!-- Form : i, id, index are positions in list -->
+
+
+  <form [formGroup]="usersFormGroup">
+    <div 
+      class="form-group"
+      formArrayName="formArray"
+      *ngFor="let formGroup of usersFormGroup.get('formArray').controls; let i = index">
+        <div
+          class="form-group"
+          [formGroupName]="i">
+          <ng-container 
+            [ngTemplateOutlet]="dispOrForm" [ngTemplateOutletContext]="{user:formGroup, id:i}">
+
+          </ng-container>
+          <ng-template #dispOrForm let-user="user" let-id="id">
+            <div *ngIf="!users[id].editMode; else edit">
+              id: {{ user.controls.id.value }} <br> <!-- user id is id in DB-->
+              Last Name: {{ user.controls.lastName.value }} <br>
+              First Name: {{ user.controls.firstName.value }} <br>
+              Email: {{ user.controls.email.value }} <br>
+              active: {{ user.controls.active.value }} <br>
+              staff: {{ user.controls.staff.value }} <br>
+              <button class="btn btn-primary" (click)="editToTrue(id)">edit</button><br>
+            </div>
+            <ng-template #edit>
+                id: {{ user.controls.id.value }} <br>
+                Last Name: <input type="text" class="form-control" placeholder="{{ user.controls.lastName.value }}" formControlName="lastName"> <br>
+                First Name: <input type="text" class="form-control" placeholder="{{ user.controls.firstName.value }}" formControlName="firstName"> <br>
+                Email: <input type="text" class="form-control" placeholder="{{ user.controls.email.value }}" formControlName="email" (touched)="console.log(user.controls.email.valid)"> <br>
+                active: <input type="checkbox" checked="{{user.controls.active.value}}" formControlName="active"> <br>
+                staff: <input type="checkbox" checked="{{user.controls.staff.value}}" formControlName="staff"> <br>
+                <button class="btn btn-primary" (click)="editToFalse(id)">save</button><br>
+            </ng-template>
+          </ng-template>
+          
+          
+         
+
+        </div>
+        
+   </div>
+  </form>
+</div>
+<app-add-user></app-add-user>

@@ -1,0 +1,33 @@
+<div class="container">
+    <h1>Place Types</h1>
+    <button class="btn btn-primary" (click)=" addPlaceTypeFormGroup()">Add</button>
+    <button class="btn btn-primary" (click)="toggleEdit()" *ngIf="!edit; else save">Edit</button>
+    <ng-template #save>
+      <button class="btn btn-primary" (click)="toggleEdit()" >Save</button>
+    </ng-template>
+  
+    <!-- Form : i, id, index are positions in list -->
+  
+  
+    <form [formGroup]="placeTypeFormGroup">
+      <div 
+        class="form-group"
+        formArrayName="formArray"
+        *ngFor="let formGroup of placeTypeFormGroup.get('formArray').controls; let i = index">
+          <div
+            class="form-group"
+            [formGroupName]="i">
+            id: {{ formGroup.controls.id.value }} <br> <!-- user id is id in DB-->
+            <div *ngIf="!placeTypes[i].editMode; else edit">
+                Name: {{ formGroup.controls.name.value }} <br>
+                <button class="btn btn-primary" (click)="editToTrue(i)">edit</button><br>
+            </div>
+            <ng-template #edit>
+              Name: <input type="text" class="form-control" placeholder="{{ formGroup.controls.name.value }}" formControlName="name"> <br>
+              <button class="btn btn-primary" (click)="editToFalse(i)">save</button><br>
+            </ng-template>    
+          </div>
+      </div>
+    </form>
+  </div>
+<div *ngFor="let place of list">{{place.name}}</div>
